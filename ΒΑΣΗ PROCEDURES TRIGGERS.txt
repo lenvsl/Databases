@@ -1,0 +1,801 @@
+
+DROP DATABASE staffevaluation;
+CREATE DATABASE staffevaluation; 
+USE staffevaluation;
+
+CREATE TABLE IF NOT EXISTS company(
+  AFM char(9) NOT NULL,
+  DOY varchar(15) NOT NULL,
+  name varchar(35) DEFAULT 'unknown' NOT NULL,
+  phone bigint(16),
+  street varchar(15) DEFAULT 'unknown' NOT NULL,
+  num tinyint(4) UNSIGNED DEFAULT '0' NOT NULL,
+  city varchar(15) DEFAULT 'unknown' NOT NULL,
+  country varchar(15) DEFAULT 'unknown' NOT NULL,
+  PRIMARY KEY (AFM)
+);
+
+INSERT INTO company VALUES
+('AM0001', 'Patras', 'EtaireiaA', '6951234564', 'Karaiskaki', '32', 'Patra', 'Greece'),
+('AM0002', 'Patras', 'EtaireiaB', '6988654987', 'Agiou Nikolaou', '4', 'Patra', 'Greece'),
+('AM0003', 'Thess', 'EtaireiaC', '6933524782', 'Aristotelous', '14', 'Thessaloniki', 'Greece'),
+('AM0004', 'ATH', 'EtaireiaD', '6965482020', 'Agias Sofias', '6', 'Athens', 'Greece'),
+('AM0005', 'ATH', 'EtaireiaE', '6942485101', 'Lefkosias', '2', 'Athens', 'Greece');
+
+
+CREATE TABLE IF NOT EXISTS user(
+  user_username varchar(12) DEFAULT 'unknown' NOT NULL,
+  user_password varchar(10) NOT NULL,
+  user_name varchar(25) DEFAULT 'unknown' NOT NULL,
+  user_surname varchar(35) DEFAULT 'unknown' NOT NULL,
+  reg_date datetime NOT NULL,
+  email varchar(30),
+  option varchar(15) DEFAULT 'unknown' NOT NULL,
+  PRIMARY KEY (user_username)
+);
+
+INSERT INTO user VALUES
+('Archo01', '01', 'Archodia', 'Giannopoulou', '2019-12-30 15:30:00', 'archo@gmail.com', 'employee'),
+('Eleni02', '02', 'Eleni', 'Vasilaki', '2017-12-05 12:50:00', 'eleni@gmail.com', 'employee'),
+('Dimitris03', '03', 'Dimitris', 'Vasilakis', '2015-10-18 17:40:00', 'dimitris@gmail.com', 'employee'),
+('Ioanna04', '04', 'Ioanna', 'Vlaxopanou', '2012-12-30 14:30:00', 'ioanna@gmail.com', 'manager'),
+('Kostas05', '05', 'Kostas', 'Papas', '2018-11-05 11:45:00', 'kostas@gmail.com', 'manager'),
+('Katerina06', '06', 'Katerina', 'Dimitriou', '2017-09-18 17:45:00', 'katerina@gmail.com', 'evaluator'),
+('Maria07', '07', 'Maria', 'Kanelopoulou', '2009-11-30 15:30:00', 'maria@gmail.com', 'evaluator'),
+('Giannis08', '08', 'Giannis', 'Giannakis', '2010-04-05 18:30:00', 'giannakis@gmail.com', 'evaluator'),
+('Panagiotis09', '09', 'Panagiotis', 'Panagiotakis', '2002-02-18 19:00:00', 'panagiotis@gmail.com', 'evaluator'),
+('Xristina10', '10', 'Xristina', 'Kosma', '2014-03-18 20:00:00', 'xristina@gmail.com', 'evaluator'),
+('Lydia11', '11', 'Lydia', 'Papakosma', '2013-02-18 20:00:00', 'lydia@gmail.com', 'evaluator'),
+('Vasiliki12', '12', 'Vasiliki', 'Piperi', '2005-05-18 20:30:00', 'vasiliki@gmail.com', 'manager'),
+('Anastasia13', '13', 'Anastasia', 'Skiada', '2008-02-18 20:30:00', 'anastasia@gmail.com', 'manager'),
+('Panagiota14', '14', 'Panagiota', 'Panoy', '2009-10-18 20:21:00', 'panagiota@gmail.com', 'manager'),
+('Argyro15', '15', 'Argyro', 'Xatzoydi', '2005-02-18 20:25:00', 'argyro@gmail.com', 'employee'),
+('Lazaros16', '16', 'Lazaros', 'Tsiamis', '2015-05-18 20:05:00', 'lazaros@gmail.com', 'employee'),
+('Marios17', '17', 'Marios', 'Varelis', '2014-02-18 20:35:00', 'marios@gmail.com', 'employee'),
+('Anna18', '18', 'Anna', 'Smaroy', '2014-02-18 20:40:00', 'anna@gmail.com', 'employee'),
+('Aspa19', '19', 'Aspa', 'Mparoy', '2015-02-18 20:40:00', 'aspa@gmail.com', 'user'),
+('Xaris20', '20', 'Xaris', 'Mpimpas', '2014-10-18 20:40:00', 'xaris@gmail.com', 'user'),
+('Manolis21', '21', 'Manolis', 'Sarifis', '2014-05-18 20:40:00', 'manolis@gmail.com', 'administrator'),
+('Sofia22', '22', 'Sofia', 'Korteris', '2014-04-18 20:40:00', 'sofia@gmail.com', 'user');
+
+
+CREATE TABLE IF NOT EXISTS manager(
+  managerUsername varchar(12) DEFAULT 'unknown' NOT NULL,
+  exp_years tinyint(4) NOT NULL,
+  firm char(9) DEFAULT 'unknown' NOT NULL,
+  CONSTRAINT MNGRFRM FOREIGN KEY (firm) REFERENCES company(AFM)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT USRNAME FOREIGN KEY (managerUsername) REFERENCES user(user_username)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO manager VALUES
+('Ioanna04', '7', 'AM0004'),
+('Kostas05', '8', 'AM0005'),
+('Vasiliki12', '15', 'AM0001'),
+('Anastasia13', '11', 'AM0002'),
+('Panagiota14', '9', 'AM0003');
+
+
+ CREATE TABLE IF NOT EXISTS evaluator(
+  evaluator_username varchar(12) DEFAULT 'unknown' NOT NULL,
+  evvv_name varchar(25) DEFAULT 'unknown' NOT NULL,
+  evvv_surname varchar(35) DEFAULT 'unknown' NOT NULL,
+  evaluator_exp_years tinyint(4) NOT NULL,
+  evaluator_firm char(9) DEFAULT 'unknown' NOT NULL,
+  PRIMARY KEY (evaluator_username),
+  CONSTRAINT EVALUSR FOREIGN KEY (evaluator_username) REFERENCES user(user_username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT EVALCMPN FOREIGN KEY (evaluator_firm) REFERENCES company(AFM)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO evaluator VALUES
+('Katerina06', 'Katerina', 'Dimitriou', '5','AM0001'),
+('Maria07', 'Maria', 'Kanelopoulou', '8', 'AM0002'),
+('Giannis08', 'Giannis', 'Giannakis', '10','AM0003'),
+('Panagiotis09', 'Panagiotis', 'Panagiotakis', '6','AM0004'),
+('Xristina10', 'Xristina', 'Kosma', '5', 'AM0005'),
+('Lydia11', 'Lydia', 'Papakosma', '6', 'AM0001');
+
+
+CREATE TABLE IF NOT EXISTS employee(
+  username varchar(12) DEFAULT 'unknown' NOT NULL,
+  bio text DEFAULT 'unknown' NOT NULL,
+  sistatikes varchar(35) DEFAULT 'unknown' NOT NULL,
+  certificates varchar(85) DEFAULT 'unknown' NOT NULL,
+  awards varchar(85) DEFAULT 'unknown' NOT NULL,
+  AFM_company char(9) NOT NULL,
+  exp_years_emp tinyint(4) NOT NULL,
+  PRIMARY KEY (username),
+  CONSTRAINT EMPLUSRNAME FOREIGN KEY (username) REFERENCES user(user_username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT AFMCMPNY FOREIGN KEY (AFM_company) REFERENCES company(AFM)
+  ON DELETE CASCADE ON UPDATE CASCADE 
+);
+
+INSERT INTO employee VALUES
+('Archo01', 'bio1', 'sistatiki01', 'Archodia Giannopoulou, ID number: AM348901', 'Award for the empowerment of cultural values within the company.', 'AM0001', '5'),
+('Eleni02', 'bio2', 'sistatiki02', 'Eleni Vasilaki, ID number: AM526312', 'Award for the greatest innovation and creativity among employees.', 'AM0002', '4'),
+('Dimitris03', 'bio3', 'sistatiki03', 'Dimitris Vasilakis, ID number: AM114822', 'Award for strengthening the corporate reputation.', 'AM0003', '2'),
+('Argyro15', 'bio4', 'sistatiki15', 'Argyro Xatzoydi, ID number: AM155622', 'Award for the creation of greater motivation and efficiency of the existing staff.', 'AM0004', '7'),
+('Lazaros16', 'bio5', 'sistatiki16', 'Lazaros Tsiamis, ID number: AM155963', 'Award for helping to attract and retain highly talented people.', 'AM0005', '5'),
+('Marios17', 'bio6', 'sistatiki17', 'Marios Varelis, ID number: AM223680', 'Good evaluation by colleagues.', 'AM0004', '3'),
+('Anna18', 'bio7', 'sistatiki18', 'Anna Smaroy, ID number: AM223555', 'Award for participation in learning.', 'AM0004', '2');
+
+
+CREATE TABLE IF NOT EXISTS job(
+  id int(4) NOT NULL,
+  start_date date NOT NULL,
+  salary float(6,1) NOT NULL,
+  position varchar(40) DEFAULT 'unknown' NOT NULL,
+  edra char(9) DEFAULT 'unknown' NOT NULL,
+  evaluator varchar(12) DEFAULT 'unknown' NOT NULL,
+  announce_date datetime NOT NULL,
+  submission_date date NOT NULL,
+  PRIMARY KEY (id),
+  CONSTRAINT JOBEVALTR FOREIGN KEY (evaluator) REFERENCES evaluator(evaluator_username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT EDRAAFM FOREIGN KEY (edra) REFERENCES company(AFM)
+  ON DELETE CASCADE ON UPDATE CASCADE  
+);
+
+INSERT INTO job VALUES
+('1001', '2019-02-12', '1.400,0', 'Computer Technician', 'AM0001', 'Katerina06', '2021-09-02 15:30:00', '2021-10-02'),
+('1002', '2018-09-26', '1.200.0', 'Seller', 'AM0002', 'Maria07', '2021-07-15 15:30:00', '2021-10-25'),
+('1003', '2017-01-06', '1.500,0', 'Engineer', 'AM0003', 'Giannis08', '2021-03-20 15:30:00', '2021-10-22'),
+('1004', '2019-05-09', '1.550,0', 'Digital marketing', 'AM0003', 'Giannis08', '2020-02-17 15:00:00', '2020-10-23'),
+('1005', '2017-07-14', '2.000,0', 'Programmer', 'AM0004', 'Panagiotis09', '2021-05-13 15:30:00', '2021-10-24'),
+('1006', '2019-06-02', '2.100,0', 'Customer Service Consultant', 'AM0005', 'Xristina10', '2020-02-25 15:00:00', '2020-10-22'),
+('1007', '2017-11-01', '1.800,0', 'Electrical Engineer', 'AM0005', 'Xristina10', '2021-10-07 15:30:00', '2021-10-22'),
+('1008', '2019-12-11', '1.300,0', 'Sales Inspector', 'AM0001', 'Lydia11', '2021-11-20 15:00:00', '2021-11-29');
+
+
+
+CREATE TABLE IF NOT EXISTS project(
+  empl varchar(12) DEFAULT 'unknown' NOT NULL,
+  num tinyint(4) NOT NULL AUTO_INCREMENT,
+  descr text,
+  url varchar(35),
+  PRIMARY KEY (num),
+  CONSTRAINT PRJCTEMPL FOREIGN KEY (empl) REFERENCES employee(username)
+  ON DELETE CASCADE ON UPDATE CASCADE 
+);
+
+INSERT INTO project VALUES
+('Archo01','1','Project about development and implementation of web applications.', 'https://www.prjct01.com'),
+('Eleni02','2','Project about Databases.', 'https://www.prjct02.com'),
+('Dimitris03','3','Project about design and development of interactive application.', 'https://www.prjct13.com'),
+('Argyro15', '4','Project about Java programming language.', 'https://www.prjct15.com'),
+('Lazaros16', '5','Project in the Telecommunications Sector.', 'https://www.prjct16.com'),
+('Marios17', '6','Project about User Interface.', 'https://www.prjct17.com'),
+('Anna18', '7','Project about Java Script.', 'https://www.prjct18.com');
+
+
+CREATE TABLE IF NOT EXISTS languages(
+  employee varchar(12) DEFAULT 'unknown' NOT NULL,
+  lang set('EN','FR','SP','GR') NOT NULL,
+  CONSTRAINT EMNM FOREIGN KEY (employee) REFERENCES employee(username)
+  ON DELETE CASCADE ON UPDATE CASCADE 
+);
+
+INSERT INTO languages VALUES
+('Archo01', 'EN'),
+('Eleni02', 'SP'),
+('Dimitris03', 'FR'),
+('Argyro15', 'EN'),
+('Lazaros16', 'EN'),
+('Marios17', 'GR'),
+('Anna18', 'FR');
+
+
+CREATE TABLE IF NOT EXISTS antikeim(
+  title varchar(36) NOT NULL,
+  descr tinytext NOT NULL,
+  belongs_to varchar(36) NOT NULL,
+  PRIMARY KEY (title),
+  CONSTRAINT ANTIKBELONGS FOREIGN KEY (belongs_to) REFERENCES antikeim(title)
+  ON DELETE CASCADE ON UPDATE CASCADE 
+);
+
+INSERT INTO antikeim VALUES
+('Programming','Knowledge of programming languages is required.','Programming'),
+('Marketing','Marketing and advertising knowledge required.','Marketing'),
+('Customer service','Supports customers by providing helpful information, answering questions, and responding to complaints.','Customer service');
+
+
+CREATE TABLE IF NOT EXISTS needs(
+  job_id int(4) NOT NULL,
+  antikeim_title varchar(36) NOT NULL,
+  CONSTRAINT JOBNEEDSS FOREIGN KEY (job_id) REFERENCES job(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT NEEDSANTIKEIM FOREIGN KEY (antikeim_title) REFERENCES antikeim(title)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO needs VALUES
+('1001','Programming'),
+('1002','Marketing'),
+('1003','Programming'),
+('1004','Marketing'),
+('1005','Programming'),
+('1006','Customer service'),
+('1007','Programming'),
+('1008','Marketing');
+
+
+CREATE TABLE IF NOT EXISTS requestsevaluation(
+  empl_usrname varchar(12) DEFAULT 'unknown' NOT NULL,
+  jobid int(4) NOT NULL,
+  CONSTRAINT RQSTVALEMPL FOREIGN KEY (empl_usrname) REFERENCES employee(username)
+  ON DELETE CASCADE ON UPDATE CASCADE, 
+  CONSTRAINT RQSTVALJOBID FOREIGN KEY (jobid) REFERENCES job(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO requestsevaluation VALUES
+('Archo01', '1001'),
+('Archo01', '1003'),
+('Archo01', '1004'),
+('Eleni02', '1002'),
+('Eleni02', '1003'),
+('Eleni02', '1004'),
+('Dimitris03', '1004'),
+('Dimitris03', '1007'),
+('Dimitris03', '1008'),
+('Argyro15', '1008'),
+('Argyro15', '1002'),
+('Argyro15', '1003'),
+('Lazaros16', '1004'),
+('Lazaros16', '1005'),
+('Marios17', '1002'),
+('Marios17', '1004'),
+('Marios17', '1003'),
+('Anna18', '1007'),
+('Anna18', '1004'),
+('Anna18', '1006'),
+('Anna18', '1008');
+
+
+CREATE TABLE IF NOT EXISTS degree(
+  titlos varchar(50) NOT NULL,
+  idryma varchar(45) NOT NULL,
+  bathmida enum('LYKEIO','UNIV','MASTER','PHD') NOT NULL,
+  PRIMARY KEY (titlos),
+  UNIQUE (idryma)
+);
+
+INSERT INTO degree VALUES
+('Master', 'UOP', 'MASTER'),
+('Doctoral Degree', 'UΝΙPΙ', 'PHD'),
+('Bachelor', 'NTUA', 'UNIV');
+
+
+CREATE TABLE IF NOT EXISTS has_degree(
+  degr_title varchar(50) NOT NULL,
+  degr_idryma varchar(45) NOT NULL,
+  empl_username varchar(12) NOT NULL,
+  etos year(4) NOT NULL,
+  grade float(3,1) NOT NULL,
+  CONSTRAINT HASDGRTITLEE FOREIGN KEY (degr_title) REFERENCES degree(titlos)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT HASDGRIDRYMEA FOREIGN KEY (degr_idryma) REFERENCES degree(idryma)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT HASDGRUSRNAMEE FOREIGN KEY (empl_username) REFERENCES employee(username)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO has_degree VALUES
+('Master', 'UOP', 'Archo01', '2000', '8.1'),
+('Bachelor', 'UΝΙPΙ', 'Eleni02', '2006', '8.0'),
+('Bachelor', 'NTUA', 'Dimitris03', '2009', '7.5');
+
+
+CREATE TABLE IF NOT EXISTS evaluations(
+  evid varchar(12) DEFAULT 'unknown' NOT NULL,
+  ev_username varchar(12) DEFAULT 'unknown' NOT NULL,
+  empl_id varchar(12) DEFAULT 'unknown' NOT NULL,
+  jobbidd int(4) NOT NULL,
+  evaluation_1 varchar(35),
+  evaluation_2 varchar(35),
+  evaluation_3 varchar(35),
+  grade_1 varchar(35),
+  grade_2 varchar(35),
+  grade_3 varchar(35),
+  Totalsum varchar(35),
+  PRIMARY KEY (evid),
+  CONSTRAINT AEA FOREIGN KEY (ev_username) REFERENCES evaluator(evaluator_username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT BB FOREIGN KEY (empl_id) REFERENCES employee(username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT ASDFGQQ FOREIGN KEY (jobbidd) REFERENCES job(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO evaluations VALUES
+('ev1', 'Katerina06', 'Archo01','1001', 'Interview', 'Evaluation2', 'Evaluation3', '2', '3', '2', 'NOT COMPLETED'),
+('ev2', 'Giannis08', 'Archo01','1003', 'Interview', 'Evaluation2', 'Evaluation3', '1', '4', '1', 'NOT COMPLETED'),
+('ev3', 'Giannis08', 'Archo01','1004', 'Interview', 'Evaluation2', 'Evaluation3', '3', 'NULL', '1', 'NOT COMPLETED'),
+('ev4', 'Maria07', 'Eleni02', '1002', 'Interview', 'Evaluation2', 'Evaluation3', 'NULL', '2', '2', 'NOT COMPLETED'),
+('ev5', 'Giannis08', 'Eleni02', '1003', 'Interview', 'Evaluation2', 'Evaluation3', '3', '4', '2', 'NOT COMPLETED'),
+('ev6', 'Giannis08', 'Eleni02', '1004', 'Interview', 'Evaluation2', 'Evaluation3', '2', '3', '2', 'NOT COMPLETED'),
+('ev7', 'Giannis08', 'Dimitris03', '1004', 'Interview', 'Evaluation2', 'Evaluation3', '2', 'NULL', 'NULL', 'NOT COMPLETED'),
+('ev8', 'Xristina10', 'Dimitris03', '1007', 'Interview', 'Evaluation2', 'Evaluation3', '0', '0', '0', 'NOT COMPLETED'),
+('ev9', 'Lydia11', 'Dimitris03', '1008', 'Interview', 'Evaluation2', 'Evaluation3', '3', '2', '1', 'NOT COMPLETED'),
+('ev10', 'Lydia11', 'Argyro15', '1008','Interview', 'Evaluation2', 'Evaluation3', '4', '3', '2', 'NOT COMPLETED'),
+('ev11', 'Maria07', 'Argyro15', '1002','Interview', 'Evaluation2', 'Evaluation3', '2', '4', '2', 'NOT COMPLETED'),
+('ev12', 'Giannis08', 'Argyro15', '1003','Interview', 'Evaluation2', 'Evaluation3', 'NULL', '3', '2', 'NOT COMPLETED'),
+('ev13', 'Giannis08', 'Lazaros16', '1004','Interview', 'Evaluation2', 'Evaluation3', '2', '3', '2', 'NOT COMPLETED'),
+('ev14', 'Panagiotis09', 'Lazaros16', '1005','Interview', 'Evaluation2', 'Evaluation3', '2', 'NULL', '2', 'NOT COMPLETED'),
+('ev15', 'Maria07', 'Marios17', '1002','Interview', 'Evaluation2', 'Evaluation3', '3', '4', '2', 'NOT COMPLETED'),
+('ev16', 'Giannis08', 'Marios17', '1003','Interview', 'Evaluation2', 'Evaluation3', '1', '3', '0', 'NOT COMPLETED'),
+('ev17', 'Giannis08', 'Marios17', '1004','Interview', 'Evaluation2', 'Evaluation3', '0', '3', '1', 'NOT COMPLETED'),
+('ev18', 'Xristina10', 'Anna18', '1007','Interview', 'Evaluation2', 'Evaluation3', '2', '4', '0', 'NOT COMPLETED'),
+('ev19', 'Giannis08', 'Anna18', '1004','Interview', 'Evaluation2', 'Evaluation3', 'NULL', '3', '2', 'NOT COMPLETED'),
+('ev20', 'Xristina10', 'Anna18', '1006','Interview', 'Evaluation2', 'Evaluation3', '2', '3', '0', 'NOT COMPLETED'),
+('ev21', 'Lydia11', 'Anna18', '1008','Interview', 'Evaluation2', 'Evaluation3', '0', '3', '2', 'NOT COMPLETED');
+
+
+CREATE TABLE IF NOT EXISTS evaluationresult(
+  evrsid varchar(12) DEFAULT 'unknown' NOT NULL,
+  Evld varchar(12) NOT NULL,
+  empl_usrname varchar(12) DEFAULT 'unknown' NOT NULL,
+  job_id int(4) NOT NULL,
+  grade varchar(35) NOT NULL,
+  comments text,
+  CONSTRAINT EVRSIDD FOREIGN KEY (evrsid) REFERENCES evaluations(evid)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT EVALRESUSRNAME FOREIGN KEY (Evld) REFERENCES evaluator(evaluator_username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT HHH FOREIGN KEY (empl_usrname) REFERENCES employee(username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT EVALRESJOB FOREIGN KEY (job_id) REFERENCES job(id)
+  ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+INSERT INTO evaluationresult VALUES
+('ev1','Katerina06', 'Archo01','1001', 'NOT COMPLETED', 'He is polite, has good manners and discusses various topics with ease.'),
+('ev2','Giannis08', 'Archo01','1003', 'NOT COMPLETED', 'Listens effectively and asks for clarification when more information is needed.'),
+('ev3','Giannis08', 'Archo01','1004', 'NOT COMPLETED', 'Uses formal and informal information channels to stay informed.'),
+('ev4','Maria07', 'Eleni02', '1002', 'NOT COMPLETED', 'Maintains an open dialogue with his colleagues.'),
+('ev5','Giannis08', 'Eleni02', '1003', 'NOT COMPLETED', 'Seeks the opinion of others when he wants to make a decision.'),
+('ev6','Giannis08', 'Eleni02', '1004', 'NOT COMPLETED', 'Reads specialized periodicals and transfers to the staff the knowledge derived from
+them.'),
+('ev7','Giannis08', 'Dimitris03', '1004', 'NOT COMPLETED', 'Expresses himself clearly and checks if the message is understood by his associates.'),
+('ev8','Maria07', 'Dimitris03', '1007', 'NOT COMPLETED', 'Ensures that important information is communicated at regular intervals, using them
+appropriate methods and means.'),
+('ev9','Katerina06', 'Dimitris03', '1008', 'NOT COMPLETED', 'Understands and accepts the customer service policy.'),
+('ev10', 'Lydia11', 'Argyro15', '1008', 'NOT COMPLETED', 'Knows his responsibilities in relation to customer satisfaction.'),
+('ev11', 'Maria07', 'Argyro15', '1002', 'NOT COMPLETED', 'Treats customers with respect and understanding.'),
+('ev12', 'Giannis08', 'Argyro15', '1003', 'NOT COMPLETED', 'Accepts personal responsibility for corrective action or troubleshooting customer service.'),
+('ev13', 'Giannis08', 'Lazaros16', '1004', 'NOT COMPLETED', 'Takes initiatives and takes action.'),
+('ev14', 'Panagiotis09', 'Lazaros16', '1005', 'NOT COMPLETED', 'He has no problem working overtime.'),
+('ev15', 'Maria07', 'Marios17', '1002', 'NOT COMPLETED', 'Consistently checks his own work for errors, both in the process and in the result.'),
+('ev16', 'Giannis08', 'Marios17', '1003', 'NOT COMPLETED', 'Checks the incoming data, in an attempt to detect significant errors before
+their use.'),
+('ev17', 'Giannis08', 'Marios17', '1004', 'NOT COMPLETED', 'Maintains open communication with customers and makes himself available on an ongoing basis and for emergencies.'),
+('ev18', 'Xristina10', 'Anna18', '1007', 'NOT COMPLETED', 'Shows sensitivity to customer concerns.'),
+('ev19', 'Giannis08', 'Anna18', '1004', 'NOT COMPLETED', 'Provides friendly and pleasant service.'),
+('ev20', 'Xristina10', 'Anna18', '1006', 'NOT COMPLETED', 'Responds and acts promptly and willingly to customer requests.'),
+('ev21', 'Lydia11', 'Anna18', '1008', 'NOT COMPLETED', 'He constantly does more things than he is asked to do.');
+
+
+CREATE TABLE IF NOT EXISTS application_submission(
+  iddemployee varchar(12) DEFAULT 'unknown' NOT NULL,
+  jbidd int(4) NOT NULL,
+  cmnyyAFM char(9) NOT NULL,
+  CONSTRAINT IDEM FOREIGN KEY (iddemployee) REFERENCES employee(username)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT GBB FOREIGN KEY (jbidd) REFERENCES job(id)
+  ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT YY FOREIGN KEY (cmnyyAFM) REFERENCES company(AFM)
+  ON DELETE CASCADE ON UPDATE CASCADE
+ );
+
+INSERT INTO application_submission VALUES
+('Archo01','1001', 'AM0001'),
+('Archo01','1003', 'AM0003'),
+('Archo01','1004', 'AM0003'),
+('Eleni02', '1002', 'AM0002'),
+('Eleni02', '1003', 'AM0003'),
+('Eleni02', '1004', 'AM0003'),
+('Dimitris03', '1004', 'AM0003'),
+('Dimitris03', '1007', 'AM0005'),
+('Dimitris03', '1008', 'AM0004'),
+('Argyro15', '1008', 'AM0004'),
+('Argyro15', '1002', 'AM0002'),
+('Argyro15', '1003', 'AM0003'),
+('Lazaros16', '1004', 'AM0003'),
+('Lazaros16', '1005', 'AM0004'),
+('Marios17', '1002', 'AM0002'),
+('Marios17', '1004', 'AM0003'),
+('Marios17', '1003', 'AM0003'),
+('Anna18', '1007', 'AM0005'),
+('Anna18', '1004', 'AM0003'),
+('Anna18', '1006', 'AM0005'),
+('Anna18', '1008', 'AM0004');
+
+
+CREATE TABLE IF NOT EXISTS log(
+  usernameRegistration varchar(12) NOT NULL,
+  happeningDate date NOT NULL,
+  happeningTime time NOT NULL,
+  execution set('success','failure') NOT NULL,
+  typeOfExecution set('insert','update','delete') NOT NULL,
+  onomaPinaka varchar(32) NOT NULL
+);
+
+
+/*PROCEDURE 1*/
+
+DROP PROCEDURE IF EXISTS erotimaA;
+DELIMITER $
+CREATE PROCEDURE erotimaA (usernamee varchar(25), usersurnamee varchar(35))
+BEGIN
+
+    DECLARE APPLICANTNAME varchar(12);
+    DECLARE APPLICATIONJOBID int(4);
+    DECLARE EVALUATION1 varchar(35);
+    DECLARE EVALUATION2 varchar(35);
+    DECLARE EVALUATION3 varchar(35);
+    DECLARE NAMEEV varchar(25);
+    DECLARE SURNAMEEV varchar(35);
+    DECLARE finishedFlag INT;
+    DECLARE aCursor CURSOR FOR
+
+       SELECT evvv_name, evvv_surname, empl_id, jobbidd, grade_1, grade_2, grade_3  
+       FROM evaluations
+       INNER JOIN employee ON empl_id=username
+       INNER JOIN user ON username=user_username
+       INNER JOIN evaluator ON evaluator_username=ev_username
+       WHERE user_name=usernamee AND user_surname=usersurnamee;
+       
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET finishedFlag=1;
+    OPEN aCursor;
+    SET finishedFlag=0;
+
+  REPEAT
+    FETCH aCursor INTO NAMEEV, SURNAMEEV, APPLICANTNAME, APPLICATIONJOBID, EVALUATION1, EVALUATION2, EVALUATION3;
+    IF (finishedFlag=0) THEN
+
+      IF (EVALUATION1='NULL' OR EVALUATION2='NULL' OR EVALUATION3='NULL') THEN
+         SELECT 'Evaluation in progress.';
+         SELECT NAMEEV AS 'Name of evaluator:', 
+         SURNAMEEV AS 'Surname of evaluator:', 
+         APPLICANTNAME AS 'Name of applicant:', 
+         APPLICATIONJOBID AS 'Job for apply:', 
+         EVALUATION1 AS '1st Evaluation', 
+         EVALUATION2 AS '2nd Evaluation', 
+         EVALUATION3 AS '3rd Evaluation';
+  
+      ELSEIF (EVALUATION1!='NULL' AND EVALUATION2!='NULL' AND EVALUATION3!='NULL') THEN
+         SELECT 'Evaluation completed:';
+         SELECT NAMEEV AS 'Name of evaluator:', 
+         SURNAMEEV AS 'Surname of evaluator:', 
+         APPLICANTNAME AS 'Name of applicant:', 
+         APPLICATIONJOBID AS 'Job for apply:', 
+         EVALUATION1 AS '1st Evaluation', 
+         EVALUATION2 AS '2nd Evaluation', 
+         EVALUATION3 AS '3rd Evaluation';
+
+      END IF; 
+    
+    END IF;
+    UNTIL (finishedFlag=1)
+  END REPEAT;
+  CLOSE aCursor;
+END $
+DELIMITER ;
+CALL erotimaA('Argyro', 'Xatzoydi');
+CALL erotimaA('Dimitris', 'Vasilakis');
+
+
+/*PROCEDURE 2*/
+
+DROP PROCEDURE IF EXISTS erotimaB;
+DELIMITER $
+CREATE PROCEDURE erotimaB (JOBID int(4), EVALUSRNM varchar(12))
+BEGIN
+    DECLARE GRADE1 varchar(35);
+    DECLARE GRADE2 varchar(35);
+    DECLARE GRADE3 varchar(35);
+    DECLARE EVUSNM varchar(12);
+    DECLARE EMDD varchar(12);
+    DECLARE TLSM varchar(35);
+    DECLARE finshedflag INT;
+    DECLARE bCursor CURSOR FOR
+
+    SELECT grade_1, grade_2, grade_3, ev_username, jobbidd, Totalsum
+    FROM evaluations
+    INNER JOIN evaluator ON ev_username=evaluator_username
+    WHERE jobbidd=JOBID AND EVALUSRNM=ev_username;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET finshedflag=1;
+    OPEN bCursor;
+    SET finshedflag=0;
+
+  REPEAT
+    FETCH bCursor INTO GRADE1, GRADE2, GRADE3, EVUSNM, EMDD, TLSM;         
+    IF (finshedflag=0) THEN
+         
+         UPDATE evaluations
+         SET Totalsum = grade_1 + grade_2 + grade_3
+         WHERE grade_1 != 'NULL' AND grade_2 != 'NULL' AND grade_3 != 'NULL'
+         AND jobbidd=JOBID AND EVALUSRNM=ev_username;
+         SELECT GRADE1, GRADE2, GRADE3, TLSM;
+         SELECT * FROM evaluations;
+         
+         UPDATE evaluationresult
+         INNER JOIN evaluations ON evrsid=evid
+         SET grade = Totalsum
+         WHERE Evld=EVALUSRNM;
+         SELECT Evld, empl_usrname, job_id, grade FROM evaluationresult;
+    
+    END IF; 
+    UNTIL (finshedflag=1)
+
+  END REPEAT;
+  CLOSE bCursor;
+END $
+DELIMITER ;
+
+CALL erotimaB('1001','Katerina06');
+CALL erotimaB('1002','Maria07');
+CALL erotimaB('1004','Giannis08');
+CALL erotimaB('1003','Giannis08');
+CALL erotimaB('1005','Panagiotis09');
+CALL erotimaB('1006','Xristina10');
+CALL erotimaB('1007','Xristina10');
+CALL erotimaB('1008','Lydia11');
+
+
+/*PROCEDURE 3*/
+
+DROP PROCEDURE IF EXISTS erotimaC;
+DELIMITER $
+CREATE PROCEDURE erotimaC (IN JJOBID int(4))
+BEGIN
+    DECLARE EML varchar(15);
+    DECLARE JBBID INT(4);
+    DECLARE GRDE varchar(35);
+    DECLARE finishedflgg INT;
+    DECLARE cCursor CURSOR FOR
+
+    SELECT empl_usrname, job_id, grade
+    FROM evaluationresult
+    WHERE JJOBID=job_id;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET finishedflgg=1;
+    OPEN cCursor;
+    SET finishedflgg=0;
+
+    REPEAT
+    FETCH cCursor INTO EML, JBBID, GRDE;
+    IF (finishedflgg=0) THEN
+          
+       
+         IF (GRDE != 'NOT COMPLETED' AND JJOBID = JBBID) THEN
+             SELECT 'Completed evaluation so far:';
+             SELECT EML, JBBID, GRDE
+             ORDER BY GRDE DESC;
+         ELSEIF (JJOBID=JBBID AND GRDE = 'NOT COMPLETED' ) THEN
+             SELECT count(grade) AS 'Evaluation in progress. Number of pending evaluations:' 
+             FROM evaluationresult              
+             WHERE grade = 'NOT COMPLETED' AND JJOBID = job_id;
+         END IF;
+
+    END IF;
+    UNTIL (finishedflgg=1)
+    END REPEAT;
+    CLOSE cCursor; 
+END $
+DELIMITER ;
+
+CALL erotimaC('1003');
+
+
+/*AFTER INSERT JOB*/
+
+DROP TRIGGER IF EXISTS jobInsert;
+DELIMITER $$
+CREATE TRIGGER jobInsert
+AFTER INSERT ON job 
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(new.evaluator, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'insert', 'job'); 
+END$$
+DELIMITER ;
+
+INSERT INTO job VALUES 
+('1009', '2019-02-25', '1.450,0', 'Customer service', 'AM0001', 'Maria07', '2021-09-20 15:00:00', '2021-10-03');
+
+SELECT * FROM log;
+
+
+/*AFTER INSERT EMPLOYEE*/
+
+DROP TRIGGER IF EXISTS employeeInsert;
+DELIMITER $$
+CREATE TRIGGER employeeInsert
+AFTER INSERT ON employee
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(new.username, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'insert', 'employee'); 
+END$$
+DELIMITER ;
+
+INSERT INTO employee VALUES 
+('Aspa19', 'bio8', 'sistatiki08', 'certificate8', 'awards8', 'AM0005', '2');
+
+SELECT * FROM log;
+
+
+/*AFTER INSERT REQUESTEVALUATION*/
+
+DROP TRIGGER IF EXISTS requestsevaluationInsert;
+DELIMITER $$
+CREATE TRIGGER requestsevaluationInsert
+AFTER INSERT ON requestsevaluation
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(new.empl_usrname, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'insert', 'requestsevaluation'); 
+END$$
+DELIMITER ;
+
+INSERT INTO requestsevaluation VALUES
+('Archo01', '1008');
+
+SELECT * FROM log;
+
+
+/*AFTER UPDATE JOB*/
+
+DROP TRIGGER IF EXISTS jobupdate;
+DELIMITER $$
+CREATE TRIGGER jobupdate
+AFTER UPDATE ON job 
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(new.evaluator, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'update', 'job'); 
+END$$
+DELIMITER ;
+
+UPDATE job  
+SET position = 'AM0002'
+WHERE id = '1001';
+
+SELECT * FROM log;
+
+
+/*AFTER UPDATE EMPLOYEE*/
+
+DROP TRIGGER IF EXISTS employeeupdate;
+DELIMITER $$
+CREATE TRIGGER employeeupdate
+AFTER UPDATE ON employee 
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(new.username, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'update', 'employee'); 
+END$$
+DELIMITER ;
+
+UPDATE employee 
+SET bio = 'AAAA'
+WHERE username = 'Archo01';
+
+SELECT * FROM log;
+
+
+/*AFTER UPDATE REQUESTEVALUATION*/
+
+DROP TRIGGER IF EXISTS requestsevaluationupdate;
+DELIMITER $$
+CREATE TRIGGER requestsevaluationupdate
+AFTER UPDATE ON requestsevaluation 
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(new.empl_usrname, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'update', 'requestsevaluation'); 
+END$$
+DELIMITER ;
+
+UPDATE requestsevaluation 
+SET jobid = '1002'
+WHERE empl_usrname = 'Archo01';
+
+SELECT * FROM log;
+
+
+/*AFTER DELETE JOB*/
+
+DROP TRIGGER IF EXISTS jobdelete;
+DELIMITER $$
+CREATE TRIGGER jobdelete
+AFTER DELETE ON job 
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(old.evaluator, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'delete', 'job'); 
+END$$
+DELIMITER ;
+
+DELETE FROM job WHERE id='1003';
+
+SELECT * FROM log;
+
+
+/*AFTER DELETE EMPLOYEE*/
+
+DROP TRIGGER IF EXISTS employeedelete;
+DELIMITER $$
+CREATE TRIGGER employeedelete
+AFTER DELETE ON employee 
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(old.username, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'delete', 'employee'); 
+END$$
+DELIMITER ;
+
+DELETE FROM employee WHERE username='Argyro15';
+
+SELECT * FROM log;
+
+
+/*AFTER DELETE REQUESTEVALUATION*/
+
+DROP TRIGGER IF EXISTS requestsevaluationdelete;
+DELIMITER $$
+CREATE TRIGGER requestsevaluationdelete
+AFTER DELETE ON requestsevaluation 
+FOR EACH ROW
+BEGIN
+   INSERT INTO log
+   VALUES(old.empl_usrname, CURRENT_TIMESTAMP, CURRENT_TIME, 'success', 'delete', 'requestsevaluation'); 
+END$$
+DELIMITER ;
+
+DELETE FROM requestsevaluation  WHERE empl_usrname = 'Archo01';
+
+SELECT * FROM log;
+
+
+/*2o trigger*/
+
+
+DROP TRIGGER IF EXISTS companyupdate;
+DELIMITER $$
+CREATE TRIGGER companyupdate BEFORE UPDATE ON company 
+FOR EACH ROW
+BEGIN
+    IF NEW.AFM <> OLD.AFM AND NEW.DOY <> OLD.DOY AND NEW.name <> OLD.name THEN
+        SET NEW.AFM = OLD.AFM,
+        NEW.DOY = OLD.DOY,
+        NEW.name = OLD.name;
+    END IF; 
+END$$
+DELIMITER ;
+
+UPDATE company
+SET AFM = 'AM0006',
+    DOY = 'Larisas',
+    name = 'EtairiaL',
+    phone = '6942428515',
+    street = 'Agias Marinis',
+    num = '5',
+    city = 'Larisa',
+    country = 'Ellada'
+WHERE AFM = 'AM0005';
+
+SELECT * FROM company;
+
+
+
+
+
+
